@@ -1,0 +1,37 @@
+{
+  "724752395556487220": {
+    "roles": [{
+      "emote": {
+        "animated": true,
+        "name": "pepe_sweat",
+        "id": "888541814951379006",
+        "guildId": "886275873077100575",
+        "requiresColons": true,
+        "managed": false,
+        "available": true,
+        "author": null,
+        "createdTimestamp": 1631915276993,
+        "url": "https://cdn.discordapp.com/emojis/888541814951379006.gif",
+        "identifier": "a:pepe_sweat:888541814951379006"
+      },
+      "role": "terrorMan",
+      "category": "series"
+    }, {
+      "emote": {
+        "animated": true,
+        "name": "pepe_sweat",
+        "id": "888541814951379006",
+        "guildId": "886275873077100575",
+        "requiresColons": true,
+        "managed": false,
+        "available": true,
+        "author": null,
+        "createdTimestamp": 1631915276993,
+        "url": "https://cdn.discordapp.com/emojis/888541814951379006.gif",
+        "identifier": "a:pepe_sweat:888541814951379006"
+      },
+      "role": "youtube",
+      "category": "notif"
+    }]
+  }
+}

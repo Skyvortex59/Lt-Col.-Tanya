@@ -1,0 +1,27 @@
+{
+    "name": "lt-col.-tanya",
+    "version": "1.0.0",
+    "description": "Bot servant à faire régner la justice",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon index.js"
+    },
+    "keywords": [
+        "Bot"
+    ],
+    "author": "Tanya | Sky",
+    "license": "ISC",
+    "dependencies": {
+        "colors": "^1.4.0",
+        "discord-api-types": "^0.37.12",
+        "discord.js": "^14.5.0",
+        "fs": "^0.0.1-security",
+        "log4js": "^6.4.1",
+        "moment": "^2.29.1",
+        "moment-duration-format": "^2.3.2",
+        "nodemon": "^2.0.15",
+        "os": "^0.1.2",
+        "path": "^0.12.7",
+        "tenorjs": "^1.0.8"
+    }
+}
