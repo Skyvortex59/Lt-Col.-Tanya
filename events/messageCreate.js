@@ -2,7 +2,7 @@ const config = require("../Storage/config.json");
 
 
 
-module.exports = async(bot, message, interaction) => {
+module.exports = async(bot, message) => {
 
     const prefix = config.prefix;
     const owners = ['323426247285669899'];
@@ -18,12 +18,14 @@ module.exports = async(bot, message, interaction) => {
     // await reactFunction.reacting(bot, message);
     // await reactFunction.pedoCard(bot, message);
     await reactFunction.fakeGift(bot, message);
+    // await reactFunction.tempo(bot, message);
     if(message.guildId === wompServer[0]) {
         await reactFunction.womp(bot, message);
     }
     
 
     if (!message.content.toLowerCase().startsWith(prefix) || !message.guild || message.author.bot || !cmd) return;
+
     if (cmd.requirements.botOwner && cmd.requirements.botOwner === true && !owners.includes(message.author.id)) return bot.functions.error(message.channel, "Désolé, seul le développeur peut utiliser cette commande.");
     if (cmd.requirements.botPerms && cmd.requirements.botPerms.length > 0 && !message.guild.me.permissions.has(cmd.requirements.botPerms)) return bot.functions.error(message.channel, `Désolé, je ne suis pas assez bien payé pour avoir la permission : \`${message.guild.me.permissions.missing(cmd.requirements.botPerms).join(", ").replace(/_/gi, " ")}\`.`);
     if (cmd.requirements.userPerms && cmd.requirements.userPerms.length > 0 && !message.member.permissions.has(cmd.requirements.userPerms)) return bot.functions.error(message.channel, `Désolé, vous n'êtes pas assez haut dans la hiérarchie pour avoir la permission : \`${message.member.permissions.missing(cmd.requirements.userPerms).join(", ").replace(/_/gi, " ")}\`.`);

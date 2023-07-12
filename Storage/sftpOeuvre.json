@@ -1,0 +1,183 @@
+{
+  "724752395556487220": {
+    "makma": {
+      "1": {
+        "oeuvrename": "Back from Heaven",
+        "version": "V1",
+        "roleID": "1067886795238416536"
+      },
+      "2": {
+        "oeuvrename": "Duc Pendragon",
+        "version": "V1",
+        "roleID": "1067886821868056627"
+      },
+      "3": {
+        "oeuvrename": "Hoarding in Hell",
+        "version": "V1",
+        "roleID": "1067886841379962963"
+      },
+      "4": {
+        "oeuvrename": "I'm destined for greatness",
+        "version": "V1",
+        "roleID": "1067886861378400286"
+      },
+      "5": {
+        "oeuvrename": "Le retour du lancier légendaire",
+        "version": "V1",
+        "roleID": "1067886879321640981"
+      },
+      "6": {
+        "oeuvrename": "Le Retour du magicien de classe 8",
+        "version": "V1",
+        "roleID": "1067886894815379657"
+      },
+      "7": {
+        "oeuvrename": "Level Up with the Gods",
+        "version": "V1",
+        "roleID": "1067886911982669857"
+      },
+      "8": {
+        "oeuvrename": "Rang SSS en détresse",
+        "version": "V1",
+        "roleID": "1067886931947561071"
+      },
+      "9": {
+        "oeuvrename": "Super Genius DNA",
+        "version": "V1",
+        "roleID": "1067886946992537611"
+      }
+    },
+    "charon": {
+      "1": {
+        "oeuvrename": "Back to SSS Rank",
+        "version": "V1",
+        "roleID": "1067886961798418513"
+      },
+      "2": {
+        "oeuvrename": "La Faucheuse de la lune errante",
+        "version": "BAT",
+        "roleID": "1067886981062856715"
+      },
+      "3": {
+        "oeuvrename": "Chroniques d'un fonctionnaire réincarné",
+        "version": "V1",
+        "roleID": "1067886997332570213"
+      },
+      "5": {
+        "oeuvrename": "Perfect Surgeon",
+        "version": "V1",
+        "roleID": "1067887029251223572"
+      },
+      "6": {
+        "oeuvrename": "Rescue System",
+        "version": "V1",
+        "roleID": "1067887048008159262"
+      },
+      "7": {
+        "oeuvrename": "The Frozen Player Returns",
+        "version": "V1",
+        "roleID": "1067887061111160932"
+      },
+      "8": {
+        "oeuvrename": "The Player Who Can't Level Up",
+        "version": "V1",
+        "roleID": "1067887075820585011"
+      }
+    },
+    "babel": {
+      "1": {
+        "oeuvrename": "Le Benjamin des Luncandel",
+        "version": "V1",
+        "roleID": "1067887099929436210"
+      }
+    }
+  },
+  "986025460574068786": {
+    "makma": {
+      "1": {
+        "oeuvrename": "Back from Heaven",
+        "version": "V1",
+        "roleID": "1069652939393740924"
+      },
+      "2": {
+        "oeuvrename": "Duc Pendragon",
+        "version": "V1",
+        "roleID": "1069653004195729448"
+      },
+      "3": {
+        "oeuvrename": "Hoarding in Hell",
+        "version": "V1",
+        "roleID": "1069653055110393996"
+      },
+      "4": {
+        "oeuvrename": "Le retour du lancier légendaire",
+        "version": "V1",
+        "roleID": "1069653115147665489"
+      },
+      "5": {
+        "oeuvrename": "Le Retour du magicien de classe 8",
+        "version": "V1",
+        "roleID": "1069653188749303852"
+      },
+      "6": {
+        "oeuvrename": "Level Up with the Gods",
+        "version": "V1",
+        "roleID": "1069653248333594684"
+      },
+      "7": {
+        "oeuvrename": "Rang SSS en détresse",
+        "version": "V1",
+        "roleID": "1069653286514348083"
+      },
+      "8": {
+        "oeuvrename": "Super Genius DNA",
+        "version": "V1",
+        "roleID": "1069653308383441031"
+      }
+    },
+    "charon": {
+      "1": {
+        "oeuvrename": "Back to SSS Rank",
+        "version": "V1",
+        "roleID": "1069653841630482452"
+      },
+      "2": {
+        "oeuvrename": "La Faucheuse de la lune errante",
+        "version": "BAT",
+        "roleID": "1069653923419398144"
+      },
+      "3": {
+        "oeuvrename": "Chroniques d'un fonctionnaire réincarné",
+        "version": "V1",
+        "roleID": "1069653985243435131"
+      },
+      "4": {
+        "oeuvrename": "Perfect Surgeon",
+        "version": "V1",
+        "roleID": "1069654041946239058"
+      },
+      "5": {
+        "oeuvrename": "Rescue System",
+        "version": "V1",
+        "roleID": "1069654109428391986"
+      },
+      "6": {
+        "oeuvrename": "The Frozen Player Returns",
+        "version": "V1",
+        "roleID": "1069654147890151524"
+      },
+      "7": {
+        "oeuvrename": "The Player Who Can't Level Up",
+        "version": "V1",
+        "roleID": "1069654197957578843"
+      }
+    },
+    "babel": {
+      "1": {
+        "oeuvrename": "Le Benjamin des Luncandel",
+        "version": "V1",
+        "roleID": "1069654507576905808"
+      }
+    }
+  }
+}

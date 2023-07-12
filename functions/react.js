@@ -1,7 +1,17 @@
 const Discord = require("discord.js");
-// const fetch = require('node-fetch');
-// const config = require("../Storage/config.json");
+const { connect } = require("http2");
+const fs = require("fs");
+const { googlekey } = require("../Storage/config.json")
 const https = require('https');
+const SFTPClient = require("./sftpConnection.js");
+const sftpLog = require("../Storage/sftpLog.json");
+const sftpInfoJSON = require("../Storage/sftpInfo.json");
+const {EmbedBuilder} = require('discord.js');
+const pathModule = require("path");
+const sftpOeuvre = JSON.parse(fs.readFileSync(pathModule.join(__dirname, "../", "Storage/sftpOeuvre.json")));
+// const indexJSON = JSON.parse(fs.readFileSync(pathModule.join(__dirname, "../", "Storage/index.json")));
+const { convertArrayToCSV } = require('convert-array-to-csv');
+
 
 var functions = {
     sortie: async function(bot, message) {
@@ -142,6 +152,7 @@ var functions = {
                             "hentai",
                             "🔞",
                             "giveaway",
+                            "tiktok18",
                         ]
                         for (const exElmt of except) {
                             if(data.toLowerCase().includes(exElmt)) {
@@ -242,7 +253,329 @@ var functions = {
             return message.channel.send({content : `Womp Womp~`, files : ["./Storage/videos/womp.mp4"]})
         }
     },
+    sftpScraper: async function(bot) {
+        bot.setMaxListeners(20);
+        for (const sftpServer in sftpLog) {
+            const serverInfo = sftpLog[sftpServer][0];
+            const host = serverInfo.host || serverInfo.hostMakma || serverInfo.hostCharon || serverInfo.hostBabel;
+            const port = serverInfo.port || serverInfo.portMakma || serverInfo.portCharon || serverInfo.portBabel;
+            const username = serverInfo.username || serverInfo.usernameMakma || serverInfo.usernameCharon || serverInfo.usernameBabel;
+            const password = serverInfo.password || serverInfo.passwordMakma || serverInfo.passwordCharon || serverInfo.passwordBabel;
+      
+            const sftpClient = new SFTPClient();
+        
+            async function connectSFTP(host, port, username, password) {
+                await sftpClient.connect({
+                    host: host,
+                    port: port,
+                    username: username,
+                    password: password,
+                    tryKeyboard: true,
+                });
+                
+                let sftpInfo = sftpInfoJSON;
+
+                async function sendEmbed(embed, roleID){
+                    bot.guilds.cache.get("986025460574068786").channels.cache.get("1069626338941599856").send({ content: `<@&${roleID}>`, ephemeral: false, embeds: [embed] });
+                }
+                
+                async function add(files, oeuvreName, roleID, path) {
+                    console.log("it's ok");
+                    let sftpInfo = sftpInfoJSON;
+                    for (const file of files) {
+                        // Vérifie si le fichier existe déjà dans sftpInfo.json
+                        let found = Object.values(sftpInfo).some(entry => entry.filename === file);
+                        if (!found) {
+                            async function getTimestamp(filePath) {
+                                try {
+                                    const fileStats = await sftpClient.client.stat(filePath);
+                                    return fileStats.modifyTime;
+                                } catch (err) {
+                                    console.log(`Failed to get timestamp for file ${filePath}:`, err);
+                                    return null;
+                                }
+                            }
+                            const timestamp = await getTimestamp(path);
+                            const id = await Object.keys(sftpInfo).length + 1;
+                            sftpInfo[id] = {
+                                filename: file,
+                                timestamp: timestamp
+                            };
+
+                            const uniqueEntries = {};
+                            const existingFilenames = new Set();
+
+                            for (const [id, entry] of Object.entries(sftpInfoJSON)) {
+                                if (!existingFilenames.has(entry.filename)) {
+                                    existingFilenames.add(entry.filename);
+                                    uniqueEntries[id] = entry;
+                                }
+                            }
+                
+                            await fs.writeFileSync(pathModule.join(__dirname, "../", "Storage/sftpInfo.json"), JSON.stringify(uniqueEntries, null, 2));
+                
+                            const DateBase = await new Date(sftpInfo[id].timestamp);
+                
+                            const embed = await new EmbedBuilder()
+                                .setColor("#f00020")
+                                .setTitle(`Du nouveau contenu a été posté !`)
+                                .addFields([
+                                    {
+                                        name: `${oeuvreName}`,
+                                        value: `*chapitre* : __${file}__`
+                                    },
+                                    {
+                                        name: 'Date de création',
+                                        value: `${DateBase.getDate() +
+                                            "/" + (DateBase.getMonth() + 1) +
+                                            "/" + DateBase.getFullYear() +
+                                            " " + DateBase.getHours() +
+                                            ":" + DateBase.getMinutes() +
+                                            ":" + DateBase.getSeconds()}`
+                                    }
+                                ]);
+                            // Appel de la nouvelle fonction pour envoyer l'embed
+                            await sendEmbed(embed, roleID);
+                        }
+                    }
+                }
+                
+                
+                
+                const interval = setInterval(async () => {
+
+                    const repositories = await sftpClient.listFiles("./SMARTOON/");
+                    let version = ["V1", "BAT"];
+                    for(const versionElmt of version) {
+                        for (const dir of repositories) {
+                            if(dir.match(versionElmt)) {
+                                const dirPath = await sftpClient.listFiles(`./SMARTOON/${dir.match(versionElmt).input}/`);
+
+                                switch(Object.keys(sftpOeuvre[bot.guilds.cache.get("986025460574068786").id]).some(key => key === sftpServer)) {
+                                    case true:
+                                        
+                                        let oeuvreNames = [];
+                                        
+                                            for (let id in sftpOeuvre[bot.guilds.cache.get("986025460574068786").id][sftpServer]) {
+                                                let oeuvreName = sftpOeuvre[bot.guilds.cache.get("986025460574068786").id][sftpServer][id].oeuvrename;
+                                                // console.log(bot.guilds.cache.get("724752395556487220").id);
+                                                let oeuvreVersion = sftpOeuvre[bot.guilds.cache.get("986025460574068786").id][sftpServer][id].version;
+                                                let roleID = sftpOeuvre[bot.guilds.cache.get("986025460574068786").id][sftpServer][id].roleID;
+                                                if(oeuvreVersion === versionElmt) {
+                                                    oeuvreNames.push([oeuvreName, roleID]);
+                                                }
+                                            }
+                                        
+
+                                        // console.log(oeuvreNames); 
+                                        
+                                        for (const dirOeuvre of dirPath) {
+                                            for(let info of oeuvreNames) {
+                                                switch(dirOeuvre.match(info[0]) != undefined) {
+                                                    case true:
+                                                        sftpClient.listFiles(`./SMARTOON/${dir.match(versionElmt).input}/${dirOeuvre.match(info[0]).input}/`)
+                                                            .then(dirChapter => {
+                                                                const intervalAdd = setInterval(async function() {
+                                                                    try {
+                                                                        add(dirChapter, dirOeuvre.match(info[0]).input, info[1],`./SMARTOON/${dir.match(versionElmt).input}/${dirOeuvre.match(info[0]).input}/`);
+                                                                        console.log("it's not ok");
+                                                                        clearInterval(intervalAdd);
+                                                                    } catch (err) {
+                                                                        console.log(err)
+                                                                    }
+                                                                }, 6000 );
+                                                            })
+                                                            .catch(err => {
+                                                                console.log(err)
+                                                            });
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                            }
+                                        }                                        
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }}
+
+                    clearInterval(interval);
+                }
+                , 60000 );
+                
+            }
+            connectSFTP(host, port, username, password)
+        }
+    },
+    // tempo: async function(bot, message) {
+    //     if (message.content.toLowerCase().includes('https://') && !message.author.bot && message.content.toLowerCase().startsWith("playlist")) {
+    //         function detectURLs(message) {
+    //             var urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+    //             return message.match(urlRegex)
+    //         };
+    //         playlistURL = detectURLs(message.content)[0];
+
+    //         playlistID = playlistURL.match(/list=.+/g)[0].replace("list=", "")
+
+    //         var pageToken = 1
+    //         var dataTreat = []
+    //         var data = ""
+
+    //         do {
+    //             if(pageToken == 1) {
+    //                 requestAPI = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&playlistId=${playlistID}&key=${googlekey}`
+    //                 await https.get(requestAPI, (response) => {
+    //                     response.on('data', (chunk) => {
+    //                         data += chunk;
+        
+    //                     });
+        
+    //                     response.on('end', async () => {
+    //                         data = JSON.parse(data)
+    //                         totalResults = data.pageInfo.totalResults;
+    //                         let page = Math.ceil(totalResults / 50);
+    //                         // dataTreat.push(data.items.)
+    //                         for (const info of data.items) {
+    //                             // console.log(`${info.snippet.title}\t${info.snippet.position}\t${info.contentDetails.videoId}`);
+    //                             dataTreat.push({name:info.snippet.title, position:info.snippet.position+1, link:`https://www.youtube.com/watch?v=${info.contentDetails.videoId}`})
+    //                         }
+    //                         console.log("ok in");
+    //                         pageToken = await data.nextPageToken;
+    //                         }).on('error', (error) => {
+    //                         console.log(error);
+    //                     })
+    //                 });
+    //             }
+    //             else {
+    //                 pageToken = await data.nextPageToken;
+    //                 console.log(pageToken);
+    //                 // console.log(pageToken);
+                    
+    //                 requestAPI = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&pageToken=${pageToken}&playlistId=${playlistID}&key=${googlekey}`
+    //                 // console.log(anotherRequest);
+    //                 await https.get(requestAPI, (response) => {
+    //                     response.on('data', (chunk) => {
+    //                         data = chunk;
+        
+    //                     });
+        
+    //                     response.on('end', () => {
+    //                         data = JSON.parse(data)
+    //                         console.log("ok");
+    //                         // for (const anotherInfo of data.items) {
+    //                         //     // console.log(`${info.snippet.title}\t${info.snippet.position}\t${info.contentDetails.videoId}`);
+    //                         //     dataTreat.push({name:anotherInfo.snippet.title, position:anotherInfo.snippet.position+1, link:`https://www.youtube.com/watch?v=${anotherInfo.contentDetails.videoId}`})
+    //                         // }
+    //                         // const csvFromArrayOfObjects = convertArrayToCSV(dataTreat);
+    //                         // // console.log(csvFromArrayOfObjects);
+    //                         // fs.writeFileSync(pathModule.join(__dirname, "../", "Storage/TouhouPlaylist.csv"), csvFromArrayOfObjects)
+                            
+    //                         // pageTokenForJSON = data.nextPageToken
+    //                         // console.log(pageTokenForJSON);
+                            
+    //                         // const indexPageToken = {
+    //                         //     index: pageTokenForJSON
+    //                         // }
+    //                         // fs.writeFileSync(pathModule.join(__dirname, "../", "Storage/index.json"), JSON.stringify(indexPageToken))
+                            
+                        
+    //                     }).on('error', (error) => {
+    //                         console.log(error);
+    //                     })
+                        
+    //                 });
+    //             }
+    //         }while(data.nextPageToken != undefined);
+            
+    //         // // console.log(requestAPI);
+    //         // var dataTreat = []
+    //         // https.get(requestAPI, (response) => {
+    //         //     let data = ""
+    //         //     response.on('data', (chunk) => {
+    //         //         data += chunk;
+
+    //         //     });
+
+    //         //     response.on('end', async () => {
+    //         //         data = JSON.parse(data)
+    //         //         totalResults = data.pageInfo.totalResults;
+    //         //         let page = Math.ceil(totalResults / 50);
+    //         //         // dataTreat.push(data.items.)
+    //         //         for (const info of data.items) {
+    //         //             // console.log(`${info.snippet.title}\t${info.snippet.position}\t${info.contentDetails.videoId}`);
+    //         //             dataTreat.push({name:info.snippet.title, position:info.snippet.position+1, link:`https://www.youtube.com/watch?v=${info.contentDetails.videoId}`})
+    //         //         }
+    //         //         if(page > 1) {
+
+    //         //             do {
+    //         //                 var pageToken = data.nextPageToken;
+    //         //                 // console.log(pageToken);
+                            
+    //         //                 requestAPI = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet%2CcontentDetails&maxResults=50&pageToken=${pageToken}&playlistId=${playlistID}&key=${googlekey}`
+    //         //                 // console.log(anotherRequest);
+    //         //                 https.get(requestAPI, (response) => {
+    //         //                     response.on('data', (chunk) => {
+    //         //                         data = chunk;
+                
+    //         //                     });
+                
+    //         //                     response.on('end', () => {
+    //         //                         data = JSON.parse(data)
+    //         //                         console.log("ok");
+    //         //                         for (const anotherInfo of data.items) {
+    //         //                             // console.log(`${info.snippet.title}\t${info.snippet.position}\t${info.contentDetails.videoId}`);
+    //         //                             dataTreat.push({name:anotherInfo.snippet.title, position:anotherInfo.snippet.position+1, link:`https://www.youtube.com/watch?v=${anotherInfo.contentDetails.videoId}`})
+    //         //                         }
+    //         //                         const csvFromArrayOfObjects = convertArrayToCSV(dataTreat);
+    //         //                         // console.log(csvFromArrayOfObjects);
+    //         //                         fs.writeFileSync(pathModule.join(__dirname, "../", "Storage/TouhouPlaylist.csv"), csvFromArrayOfObjects)
+                                    
+    //         //                         // pageTokenForJSON = data.nextPageToken
+    //         //                         // console.log(pageTokenForJSON);
+                                    
+    //         //                         // const indexPageToken = {
+    //         //                         //     index: pageTokenForJSON
+    //         //                         // }
+    //         //                         // fs.writeFileSync(pathModule.join(__dirname, "../", "Storage/index.json"), JSON.stringify(indexPageToken))
+                                    
+                                
+    //         //                     }).on('error', (error) => {
+    //         //                         console.log(error);
+    //         //                     })
+                                
+    //         //                 });
+    //         //             }while(data.nextPageToken != undefined)
+    //         //         }
+
+
+    //         //     }).on('error', (error) => {
+    //         //         console.log(error);
+    //         //     })
+    //         // });
+            
+    //     }
+    // }
 
 }
-
 module.exports = functions;
+// "piccoma-makma" : [
+  //   {
+  //     "hostMakma" : "piccoma.exavault.com",
+  //     "portMakma" : "22",
+  //     "ipMakma" : "67.208.93.232",
+  //     "usernameMakma" : "STUDIOMAKMA",
+  //     "passwordMakma" : "9AyERq6mysSg4hYq"
+  //   }
+  // ],
+  // "piccoma-charon" : [
+  //   {
+  //     "hostCharon" : "piccoma.exavault.com",
+  //     "portCharon" : "22",
+  //     "ipCharon" : "67.208.93.232",
+  //     "usernameCharon" : "STUDIOCHARON",
+  //     "passwordCharon" : "7GmqZwDL2RXGgAwmLf2W"
+  //   }
+  // ],
+

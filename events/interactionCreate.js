@@ -1,8 +1,6 @@
 module.exports = async (bot, interaction) => {
 	// name: 'interactionCreate',
         if(!interaction.isCommand()) return;
-
-        console.log(interaction.options._hoistedOptions);
         
         // if (interaction.isSelectMenu()) {
         //     console.log("ok");
@@ -17,7 +15,23 @@ module.exports = async (bot, interaction) => {
         if (!bot.interactions.has(interaction.commandName)) return;
 
         try {
-            bot.interactions.get(interaction.commandName).run(bot, interaction, args = interaction.options._hoistedOptions[0].value ); //args
+            // test = interaction.options._hoistedOptions;
+            // console.log(test);
+            // // if(JSON.parse(interaction.options._hoistedOptions) == []) {
+            // //     console.log("test");
+            // //     bot.interactions.get(interaction.commandName).run(bot, interaction); //args
+            // // } else {
+                switch (interaction.options._hoistedOptions.length) {
+                    case 0:
+                        bot.interactions.get(interaction.commandName).run(bot, interaction); //args
+                        break;
+                
+                    default:
+                        bot.interactions.get(interaction.commandName).run(bot, interaction, args = interaction.options._hoistedOptions[0].value ); //args
+                        break;
+                }
+                
+            // }
             var user = bot.users.cache.filter(f => f.bot != true).forEach(elmt => {
                 bot.logger.log(`[${elmt.username}#${elmt.discriminator}] a utilisé la slash commande [${interaction.commandName}]`).catch(e => { return console.log(e) });
             })

@@ -14,7 +14,6 @@ exports.run = async(bot, message, args) => {
             .setImage(userMentionned.displayAvatarURL({ format: 'png', size: 4096 }))
             .setTitle(`Voici l'avatar de [${message.guild.members.cache.get(userMentionned.id).nickname}]`)
             .setTimestamp()
-        console.log("Test");
         return message.channel.send({
             embeds: [MentionnedEmbed]
         }); //envoie l'embed
@@ -27,7 +26,6 @@ exports.run = async(bot, message, args) => {
         .setImage(message.author.displayAvatarURL({format : 'png', size: 4096, dynamic : true}))
         .setTitle(`Voici votre avatar`)
         .setTimestamp()
-    console.log("Test");
     message.channel.send({
         embeds: [embed]
     }); //envoie l'embed

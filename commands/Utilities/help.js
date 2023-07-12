@@ -16,14 +16,18 @@ exports.run = async(bot, message, args) => {
         .setTimestamp()
     for (let i = 0; i < help.length; i++) {
         if(help[i].requirements.userPerms[0] != undefined) {
-            cahier.addField(`${help[i].help.name.toUpperCase()} [${help[i].help.aliases[0].toUpperCase()}]`, help[i].help.description + `\n**permissions requises : Modérateur**`);
+            cahier.addFields([{
+                name :`${help[i].help.name.toUpperCase()} [${help[i].help.aliases[0].toUpperCase()}]`, 
+                value : help[i].help.description + `\n**permissions requises : Modérateur**`}
+            ]);
         } else {
-            cahier.addField(`${help[i].help.name.toUpperCase()} [${help[i].help.aliases[0].toUpperCase()}]`, help[i].help.description);
+            cahier.addFields([{
+                name :`${help[i].help.name.toUpperCase()} [${help[i].help.aliases[0].toUpperCase()}]`, 
+                value : help[i].help.description
+            }]);
         }
         
     }
-
-    console.log(message);
     
     message.channel.send({
         embeds: [cahier]

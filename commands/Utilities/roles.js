@@ -1,7 +1,8 @@
-const { MessageActionRow, MessageSelectMenu, MessageButton, EmbedBuilder, ButtonBuilder } = require('discord.js');
+const { MessageActionRow, MessageSelectMenu, MessageButton, EmbedBuilder, ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const { prefix } = require("../../Storage/config.json");
-const db = require("../../Storage/roleDB.json");
 const fs = require("fs");
+const db = JSON.parse(fs.readFileSync("./Storage/roleDB.json"));
+
 
 exports.run = async(bot, message, args, interaction) => {
 
@@ -101,7 +102,6 @@ exports.run = async(bot, message, args, interaction) => {
             console.error(err)
         }
     }
-
 
     if(args[0].toLowerCase() == "addroles") {
         if(!args[1]) {

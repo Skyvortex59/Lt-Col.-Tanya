@@ -1,5 +1,7 @@
 {
-    "token": "OTQzNjI0NTIxOTIxOTk0Nzky.Yg1w0Q.QSaPK-3DwTEVCZeTDCj2bNfcj4E",
+    "token": "OTQzNjI0NTIxOTIxOTk0Nzky.Gire4P.mCRycgTMDtfgVhvpIjt0YmZcdHZkag0Qzprrfs",
     "tenorkey": "BP1JRZ56J4G2",
-    "prefix": "t!"
+    "prefix": "t!",
+    "googlekey": "AIzaSyBg2DhXNfyM7RMcGSPkuG-sJ_ZZEdVntLA",
+    "mongoDB_URI": "mongodb+srv://tanya:XS54inypOz5vFuvc@tanya.csftwqg.mongodb.net/?retryWrites=true&w=majority"
 }
