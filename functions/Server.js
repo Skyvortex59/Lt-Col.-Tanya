@@ -46,13 +46,20 @@ class Server {
     this.app.post('/upload', this.upload.single('file'), async (req, res) => {
       const uploadedFile = req.file;
       if (uploadedFile) {
-        // Appel de la fonction pour traiter le fichier téléchargé
-        await processFile(uploadedFile);
+        // Fonction de mise à jour de la progression
+        const updateProgress = (progress) => {
+          // Envoyer la progression au client via Socket.io ou tout autre moyen
+          // Par exemple : socket.emit('progress', progress);
+        };
+    
+        // Appel de la fonction pour traiter le fichier téléchargé en passant la fonction de mise à jour de la progression
+        await processFile(uploadedFile, updateProgress);
         res.send('File uploaded and processed successfully.');
       } else {
         res.status(400).send('No file uploaded.');
       }
     });
+    
 
     // Ajoutez ici d'autres routes selon vos besoins
   }

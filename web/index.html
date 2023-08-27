@@ -1,5 +1,3 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,27 +20,111 @@
     h1 {
       color: #fff;
     }
+    
     p {
-        color: #fff;
+      color: #fff;
+    }
+
+    .progress {
+      margin-top: 3em;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .popup-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .loader {
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #3498db;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div class="container custom-container">
     <h1 class="text-center text-light mb-4">File Uploader</h1>
-    <form id="uploadForm" method="post" action="/upload" enctype="multipart/form-data">
+    <form id="uploadForm" enctype="multipart/form-data">
       <div class="form-group">
         <label for="fileInput" class="text-light">Select ZIP/RAR file:</label>
         <input type="file" class="form-control-file" id="fileInput" name="file" accept=".zip,.rar" required multiple>
-        <p>Si vous mettez plusieurs fichier zip à traiter, vous avez un maximum de 10 !</p>
       </div>
       <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <button type="button" class="btn btn-primary" onclick="uploadFile()">Upload</button>
       </div>
     </form>
+    <div class="popup" id="popupContainer" style="display: none;">
+      <div class="popup-content">
+        <div class="loader"></div>
+        <p id="jsonData"></p>
+      </div>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    function showPopup() {
+      const popupContainer = document.getElementById('popupContainer');
+      popupContainer.style.display = 'flex';
+    }
+
+    function hidePopup() {
+      const popupContainer = document.getElementById('popupContainer');
+      popupContainer.style.display = 'none';
+    }
+
+    function displayData(data) {
+      const jsonDataElement = document.getElementById('jsonData');
+      jsonDataElement.textContent = data;
+    }
+
+    function uploadFile() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        showPopup();
+
+        axios.post('/upload', formData)
+          .then((response) => {
+            hidePopup();
+            displayData(response.data);
+          })
+          .catch((error) => {
+            hidePopup();
+            console.error(error);
+          });
+      }
+    }
+  </script>
 </body>
 </html>
