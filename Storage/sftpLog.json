@@ -1,29 +1,29 @@
 {
   "makma" : [
     {
-      "hostMakma" : "piccoma.exavault.com",
+      "hostMakma" : "=",
       "portMakma" : "22",
       "ipMakma" : "",
-      "usernameMakma" : "STUDIOMAKMA",
-      "passwordMakma" : "9AyERq6mysSg4hYq"
+      "usernameMakma" : "-",
+      "passwordMakma" : "-"
     }
   ],
   "charon" : [
     {
-      "hostCharon" : "piccoma.exavault.com",
+      "hostCharon" : "=",
       "portCharon" : "22",
       "ipCharon" : "",
-      "usernameCharon" : "STUDIOCHARON",
-      "passwordCharon" : "7GmqZwDL2RXGgAwmLf2W"
+      "usernameCharon" : "-",
+      "passwordCharon" : "-"
     }
   ],
   "babel" : [
     {
-      "hostBabel" : "piccoma.exavault.com",
+      "hostBabel" : "=",
       "portBabel" : "22",
       "ipBabel" : "",
-      "usernameBabel" : "STUDIOBABELGOMME",
-      "passwordBabel" : "PDKv5BPx3HdWEMtN"
+      "usernameBabel" : "-",
+      "passwordBabel" : "-"
     }
   ]
 }
